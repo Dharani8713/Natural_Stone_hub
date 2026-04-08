@@ -1,18 +1,10 @@
-# Use an official OpenJDK image
-FROM openjdk:17-jdk-slim
+FROM tomcat:9.0-jdk17
 
-# Set working directory
-WORKDIR /app
+# Remove default ROOT app
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Copy project files
-COPY . .
+# Copy your WAR into Tomcat
+COPY Natural_Stone_hub.war /usr/local/tomcat/webapps/ROOT.war
 
-# If using Maven, build the project
-RUN apt-get update && apt-get install -y maven
-RUN mvn clean package
-
-# Expose port (Tomcat default is 8080)
 EXPOSE 8080
-
-# Run the WAR/JAR (adjust path to your build output)
-CMD ["java", "-jar", "target/yourapp.jar"]
+CMD ["catalina.sh", "run"]
